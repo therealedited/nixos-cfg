@@ -14,7 +14,8 @@
 
   # Bootloader.
   # boot.loader.systemd-boot.enable = true;
-  boot.loader = { 
+  boot.loader = {
+    timeout = 30;
     grub = {
       enable = true;
       device = "nodev";
