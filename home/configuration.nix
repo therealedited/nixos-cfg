@@ -2,17 +2,35 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      ../system/tamamo/hardware-configuration.nix
     ];
+    
+    boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # boot.loader.systemd-boot.enable = true;
+  boot.loader = { 
+    grub = {
+      enable = true;
+      device = "nodev";
+      efiSupport = true;
+      useOSProber = true;
+      theme = pkgs.fetchFromGitHub {
+        owner = "therealedited";
+        repo = "crossgrub";
+        rev = "dba6c4eaead30401514ebfdcc7e7b2030f9d6979";
+        hash = "sha256-z6yQaMnAusr+FKyTDBZR5q1iAwvCFtK6IZYcFEixP3s=";
+      }; 
+    };
+    efi = {
+     canTouchEfiVariables = true;
+    };
+  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -47,7 +65,7 @@
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -81,24 +99,26 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.user = {
-    isNormalUser = true;
-    description = "user";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      pkgs.networkmanagerapplet	
-    ];
+  users.users = {
+    tamamo = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      description = "tamamo";
+      extraGroups = [ "networkmanager" "wheel" ];
+      packages = with pkgs; [
+        networkmanagerapplet	
+      ];
+    };
   };
-  users.defaultUserShell=pkgs.zsh;
 
-  # Install firefox.
   # Install firefox.
   programs.firefox.enable = true;
   programs.hyprland = {
   	enable = true;
   	xwayland.enable = true;
+  	package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
-
+  
   programs.zsh = {
     enable = true;
     zsh-autoenv.enable = true;
@@ -113,23 +133,45 @@
     };
   };
   
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    substituters = ["https://hyprland.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
+  
   programs.neovim = {
   	enable = true;
-  	defaultEditor = true;
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   
+  nixpkgs.config.nvidia.acceptLicense = true;
+
   
   environment.sessionVariables = {
-  	WLR_NO_HARDWARE_CURSORS = "1";
   	NIXOS_OZONE_WL = "1";
   };
   
+  services.xserver.videoDrivers = ["nvidia"];
+
   hardware = {
   	opengl.enable = true;
-  	nvidia.modesetting.enable = true;
+  	nvidia = {
+	  modesetting.enable = true;
+	  open = false;
+	  nvidiaSettings = true;
+	  # package = config.boot.kernelPackages.nvidiaPackages.latest;
+	  package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+	    version = "555.58.02";
+      		sha256_64bit = "sha256-xctt4TPRlOJ6r5S54h5W6PT6/3Zy2R4ASNFPu8TSHKM=";
+      		sha256_aarch64 = "sha256-xctt4TPRlOJ6r5S54h5W6PT6/3Zy2R4ASNFPu8TSHKM=";
+      		openSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
+      		settingsSha256 = "sha256-ZpuVZybW6CFN/gz9rx+UJvQ715FZnAOYfHn5jt5Z2C8=";
+      		persistencedSha256 = lib.fakeSha256;
+      		
+	  };
+	};
   };
   
   xdg.portal.enable = true;
@@ -137,22 +179,28 @@
   fonts.packages = with pkgs; [
 	font-awesome
   ];
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options =  "--delete-older-than 30d";
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  	git
+  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    	git
   	wget
-  	pkgs.waybar
-  	(pkgs.waybar.overrideAttrs (oldAttrs: {
-  		mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-  		})
-  	)
-  	pkgs.dunst
+  	waybar
+  	dunst
   	kitty
   	rofi-wayland
 	swww
 	wev
-	pkgs.wl-clipboard
+	neofetch
+	wdisplays
+	lutris
+	wl-clipboard
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
