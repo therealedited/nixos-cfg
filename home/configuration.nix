@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../system/tamamo/hardware-configuration.nix
+      ../system/tamamo/hardware-configuration.nix 
     ];
     
     boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
@@ -33,6 +33,7 @@
     };
   };
 
+    
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -101,30 +102,10 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users = {
-    tamamo = {
-      shell = pkgs.zsh;
-      isNormalUser = true;
-      description = "tamamo";
-      extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [
-        networkmanagerapplet	
-      ];
-    };
-  };
+  programs.git.enable = true;
 
-  # Install firefox.
-  programs.firefox.enable = true;
-  programs.hyprland = {
-  	enable = true;
-  	xwayland.enable = true;
-  	package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-  };
-  
-  programs.zsh = {
+   programs.zsh = {
     enable = true;
-    zsh-autoenv.enable = true;
     syntaxHighlighting.enable = true;
     ohMyZsh = {
       enable = true;
@@ -134,6 +115,29 @@
 	"history"
       ];
     };
+  };
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users = {
+    tamamo = {
+      shell = pkgs.zsh;
+      isNormalUser = true;
+      description = "tamamo";
+      extraGroups = [ "networkmanager" "wheel" ];
+      packages = with pkgs; [
+        neofetch
+        networkmanagerapplet	
+      ];
+    };
+  };
+
+  users.defaultUserShell = pkgs.zsh;
+  
+  # Install firefox.
+  programs.firefox.enable = true;
+  programs.hyprland = {
+  	enable = true;
+  	xwayland.enable = true;
+  	package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
   
   nix.settings = {
@@ -191,7 +195,6 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     	git
   	wget
   	waybar
@@ -205,6 +208,8 @@
 	lutris
 	wl-clipboard
   ];
+
+  time.hardwareClockInLocalTime = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
