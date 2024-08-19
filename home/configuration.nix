@@ -124,6 +124,7 @@
       description = "tamamo";
       extraGroups = [ "networkmanager" "wheel" ];
       packages = with pkgs; [
+        webcord
         networkmanagerapplet
 	swaybg
 	swaylock-fancy
@@ -134,7 +135,7 @@
         waybar
   	dunst
   	kitty
-  	rofi-wayland
+  	wofi
 	swww
 	wdisplays
 	lutris
@@ -200,7 +201,8 @@
 	font-awesome
 	jetbrains-mono
 	iosevka
-  ];
+	noto-fonts-color-emoji
+];
   nix.gc = {
     automatic = true;
     dates = "weekly";
