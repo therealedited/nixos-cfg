@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../system/tamamo/hardware-configuration.nix 
+      ../system/tamamo/hardware-configuration.nix
     ];
     
     boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
@@ -32,6 +32,8 @@
      canTouchEfiVariables = true;
     };
   };
+
+  nixpkgs.config.allowUnfree = true;
 
     
   networking.hostName = "nixos"; # Define your hostname.
@@ -103,19 +105,7 @@
   # services.xserver.libinput.enable = true;
 
   programs.git.enable = true;
-
-   programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    ohMyZsh = {
-      enable = true;
-      theme = "robbyrussell";
-      plugins = [
-        "git"
-	"history"
-      ];
-    };
-  };
+  programs.zsh.enable = true;
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users = {
     tamamo = {
@@ -123,28 +113,8 @@
       isNormalUser = true;
       description = "tamamo";
       extraGroups = [ "networkmanager" "wheel" ];
-      packages = with pkgs; [
-        webcord
-        networkmanagerapplet
-	swaybg
-	swaylock-fancy
-	swayidle
-	pamixer
-	light
-	brillo
-        waybar
-  	dunst
-  	kitty
-  	wofi
-	swww
-	wdisplays
-	lutris
-	wl-clipboard
-      ];
     };
   };
-
-  users.defaultUserShell = pkgs.zsh;
   
   # Install firefox.
   programs.firefox.enable = true;
@@ -163,9 +133,6 @@
   programs.neovim = {
   	enable = true;
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
   
   nixpkgs.config.nvidia.acceptLicense = true;
 

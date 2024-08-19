@@ -1,6 +1,6 @@
 .PHONY: update
 update:
-	home-manager switch --flake .#tamamo
+	sudo nixos-rebuild switch --flake '.#tamamo'
 
-push:
+commit:
 	git add . && git commit -m "update"

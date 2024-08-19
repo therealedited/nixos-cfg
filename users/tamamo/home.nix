@@ -3,13 +3,40 @@
 {
   home = {
     packages = with pkgs; [
-      hello
       gnumake
+      oh-my-zsh
+      webcord
+      networkmanagerapplet
+      swaybg
+      swaylock-fancy
+      swayidle
+      pamixer
+      light
+      brillo
+      waybar
+      dunst
+      kitty
+      wofi
+      swww
+      wdisplays
+      lutris
+      wl-clipboard
     ];
-
+    
     username = "tamamo";
     homeDirectory = "/home/tamamo";
+    
+    stateVersion = "24.05";
+  };
 
-    stateVersion = "23.11";
+  programs.home-manager.enable = true;
+  programs.zsh = {
+    enable = true;
+    syntaxHighlighting.enable = true;
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" "history" ];
+      theme = "robbyrussell";
+    };
   };
 }
