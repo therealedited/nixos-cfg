@@ -10,19 +10,25 @@
     };
   };
 
-    outputs = {nixpkgs, home-manager, ...} @ inputs: {
-    nixosConfigurations.tamamo = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./home/configuration.nix
-	home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.tamamo = import ./users/tamamo/home.nix;
-        }
-      ];
-    };
-  };
+    outputs = {nixpkgs, home-manager, ...} @ inputs:
+      let
+        lib = nixpkgs.lib;
+	system = "x86_64-linux";
+	pkgs = import nixpkgs { inherit system; };
+      in {
+        nixosConfigurations = {
+          tamamo = nixpkgs.lib.nixosSystem {
+            specialArgs = { inherit inputs; };
+            modules = [
+              ./home/configuration.nix
+            ];
+          };
+        };
+        homeConfigurations = {
+          tamamo = home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+  	    modules = [ ./users/tamamo/home.nix ];
+  	  };
+        };
+      };
 }
