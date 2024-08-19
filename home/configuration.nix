@@ -124,8 +124,21 @@
       description = "tamamo";
       extraGroups = [ "networkmanager" "wheel" ];
       packages = with pkgs; [
-        neofetch
-        networkmanagerapplet	
+        networkmanagerapplet
+	swaybg
+	swaylock-fancy
+	swayidle
+	pamixer
+	light
+	brillo
+        waybar
+  	dunst
+  	kitty
+  	rofi-wayland
+	swww
+	wdisplays
+	lutris
+	wl-clipboard
       ];
     };
   };
@@ -185,6 +198,8 @@
 
   fonts.packages = with pkgs; [
 	font-awesome
+	jetbrains-mono
+	iosevka
   ];
   nix.gc = {
     automatic = true;
@@ -197,16 +212,6 @@
   environment.systemPackages = with pkgs; [
     	git
   	wget
-  	waybar
-  	dunst
-  	kitty
-  	rofi-wayland
-	swww
-	wev
-	neofetch
-	wdisplays
-	lutris
-	wl-clipboard
   ];
 
   time.hardwareClockInLocalTime = true;
