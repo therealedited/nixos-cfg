@@ -9,7 +9,7 @@
     src = pkgs.fetchFromGitHub {
       owner = "NvChad";
       repo = "starter";
-      rev = "3e1667ef3c5c5f74ba0783eb50984f5e2700948c";
+      rev = "fea5d02d2d07b148243c058d1b8b775f9cccac5e";
       sha256 = "sha256-J0iB+5aRuirhF91CnFfG8hDmkY5jOT2QlHrkoku3WVw=";
     };
   
