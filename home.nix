@@ -45,4 +45,8 @@
       theme = "robbyrussell";
     };
   };
+
+  xdg.configFile."nvim/" = {
+    source = (pkgs.callPackage ./modules/nvchad/default.nix{}).nvchad;
+  };
 }
