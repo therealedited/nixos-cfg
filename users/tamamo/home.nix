@@ -21,6 +21,7 @@
       wdisplays
       lutris
       wl-clipboard
+      hello
     ];
     
     username = "tamamo";
@@ -28,7 +29,12 @@
     
     stateVersion = "24.05";
   };
-
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
+  }; 
   programs.home-manager.enable = true;
   programs.zsh = {
     enable = true;
