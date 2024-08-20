@@ -34,19 +34,24 @@
       allowUnfree = true;
       allowUnfreePredicate = (_: true);
     };
-  }; 
-  programs.home-manager.enable = true;
-  programs.zsh = {
-    enable = true;
-    syntaxHighlighting.enable = true;
-    oh-my-zsh = {
+  };
+  programs = {
+    home-manager.enable = true;
+    zsh = {
       enable = true;
-      plugins = [ "git" "history" ];
-      theme = "robbyrussell";
+      syntaxHighlighting.enable = true;
+      oh-my-zsh = {
+        enable = true;
+        plugins = [ "git" "history" ];
+        theme = "robbyrussell";
+        };
     };
   };
+
+
 
   xdg.configFile."nvim/" = {
     source = (pkgs.callPackage ./modules/nvchad/default.nix{}).nvchad;
   };
+
 }

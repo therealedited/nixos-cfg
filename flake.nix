@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    neovim = {
+      url = "github:neovim/neovim/stable?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
     outputs = {nixpkgs, home-manager, ...} @ inputs:

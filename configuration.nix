@@ -7,7 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../system/tamamo/hardware-configuration.nix
+      ./hardware-configuration.nix
     ];
     
     boot.kernelParams = [ "nvidia-drm.fbdev=1" ];
@@ -120,6 +120,10 @@
   	xwayland.enable = true;
   	package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
+  programs.neovim = {
+    enable = true;
+    package = inputs.neovim.packages.${pkgs.stdenv.hostPlatform.system}.neovim;
+  };
   
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -127,12 +131,8 @@
     trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
   
-  programs.neovim = {
-  	enable = true;
-  };
-  
   nixpkgs.config.nvidia.acceptLicense = true;
-
+  nixpkgs.config.allowUnfree = true;
   
   environment.sessionVariables = {
   	NIXOS_OZONE_WL = "1";
